@@ -19,7 +19,7 @@ defmodule SecureRandom do
       iex> SecureRandom.base64(8)
       "2yDtUyQ5Xws="
   """
-  def base64(n // @default_length) when is_integer n do
+  def base64(n \\ @default_length) when is_integer n do
     random_bytes(n)
     |> :base64.encode_to_string
     |> to_string
@@ -33,7 +33,7 @@ defmodule SecureRandom do
       iex> SecureRandom.urlsafe_base64(8)
       "8cN__l-6wNw"
   """
-  def urlsafe_base64(n // @default_length) when is_integer n do
+  def urlsafe_base64(n \\ @default_length) when is_integer n do
     random_bytes(n)
     |> :base64.encode_to_string
     |> to_string
@@ -51,10 +51,10 @@ defmodule SecureRandom do
       iex> SecureRandom.hex(8)
       "125583e32b698259"
   """
-  def hex(n // @default_length) when is_integer n do
+  def hex(n \\ @default_length) when is_integer n do
     random_bytes(n)
-    |> bitstring_to_list
-    |> Enum.map(fn (x) -> integer_to_binary(x, 16) end)
+    |> :erlang.bitstring_to_list
+    |> Enum.map(fn (x) -> :erlang.integer_to_binary(x, 16) end)
     |> Enum.join
     |> String.downcase
   end
@@ -87,7 +87,7 @@ defmodule SecureRandom do
     :crypto.rand_uniform(1, x)
   end
 
-  def random_number(range) when is_range range do
+  def random_number(range) do
     :crypto.rand_uniform(Range.first(range), Range.last(range))
   end
 
@@ -104,7 +104,7 @@ defmodule SecureRandom do
       iex> SecureRandom.random_bytes(8)
       <<231, 123, 252, 174, 156, 112, 15, 29>>
   """
-  def random_bytes(n // @default_length) when is_integer n do
+  def random_bytes(n \\ @default_length) when is_integer n do
     :crypto.strong_rand_bytes(n)
   end
 end
