@@ -3,10 +3,10 @@ require SecureRandom
 
 defmodule RoomManager do
   use GenServer
-  defstruct room_pids: %HashDict{}, age: 27
+  defstruct room_pids: HashDict.new
 
   def init(_) do
-    {:ok, %RoomManager{room_pids: HashDict.new}}
+    {:ok, %RoomManager{}}
   end
 
   def start() do 
@@ -17,7 +17,7 @@ defmodule RoomManager do
     GenServer.call(pid, {:room_list})
   end
 
-  def new_room() do
+  def new_room(pid) do
     GenServer.call(pid, {:new_room})
   end
   # Callbacks
@@ -32,8 +32,8 @@ defmodule RoomManager do
     random_name = SecureRandom.hex
     room_params = %Room.RoomParams{name: random_name}
     {:ok, pid} = Room.start(room_params)
-    new_room_pids = HashDict.put_new(room_pids, room_params, pid)
-    new_state = %RoomManager{state | room_pids => new_room_pids}
-    {:reply, pid, new_state}
+    new_room_pids = HashDict.put(room_pids, random_name, pid)
+    new_state = %RoomManager{state | :room_pids => new_room_pids}
+    {:reply, [pid: pid, name: random_name], new_state}
   end
 end

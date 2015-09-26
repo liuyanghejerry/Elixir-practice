@@ -8,6 +8,9 @@ defmodule RoomManagerTest do
 
   test "RoomManager can generate random new room" do
     {:ok, manager_pid} = RoomManager.start
-    room_pid = RoomManager.new_room
+    [pid: _, name: room_name] = RoomManager.new_room manager_pid
+    room_pids = RoomManager.get_room_list manager_pid
+    assert HashDict.size(room_pids) == 1
+    assert HashDict.has_key?(room_pids, room_name)
   end
 end
