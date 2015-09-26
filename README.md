@@ -1,4 +1,4 @@
 Paintty2
 ========
 
-** TODO: Add description **
+Yet another implementation of painttyServer.
